@@ -51,13 +51,9 @@ export default function MobileHeader({ onMenuToggle, isMenuOpen, onSelectSession
             onSelectSession("");
             router.push("/");
           }}
-          className="text-lg font-bold tracking-wide uppercase text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors cursor-pointer leading-tight text-center"
+          className="text-lg font-bold tracking-wide uppercase bg-gradient-to-r from-[#7E99A3] to-[#5A7A85] bg-clip-text text-transparent hover:from-[#6B8A95] hover:to-[#4A6A75] transition-all duration-200 cursor-pointer"
         >
-          <div>MAKE YOUR</div>
-          <div>CAREER</div>
-          <div>BRIGHT</div>
-          <div>WITH</div>
-          <div className="text-blue-600 dark:text-blue-400">GUIDE-ME-AI</div>
+          GUIDE-ME-AI
         </button>
 
         {/* Right side controls */}
