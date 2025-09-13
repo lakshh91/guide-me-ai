@@ -9,7 +9,12 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id || (session as any).user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -17,7 +22,7 @@ export async function GET(
     const chatSession = await prisma.chatSession.findUnique({
       where: { 
         id,
-        userId: session.user.id // Ensure user owns this session
+        userId: userId // Ensure user owns this session
       },
       include: { messages: true },
     });
@@ -39,7 +44,12 @@ export async function PATCH(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id || (session as any).user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -48,7 +58,7 @@ export async function PATCH(
     const chatSession = await prisma.chatSession.update({
       where: { 
         id,
-        userId: session.user.id // Ensure user owns this session
+        userId: userId // Ensure user owns this session
       },
       data: { title },
     });
@@ -65,7 +75,12 @@ export async function DELETE(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id || (session as any).user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -75,7 +90,7 @@ export async function DELETE(
       prisma.chatSession.delete({ 
         where: { 
           id,
-          userId: session.user.id // Ensure user owns this session
+          userId: userId // Ensure user owns this session
         }
       }),
     ]);

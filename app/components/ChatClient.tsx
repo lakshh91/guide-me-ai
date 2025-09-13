@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatWindow from "./ChatWindow";
 
 type Message = {
@@ -10,6 +10,43 @@ type Message = {
 
 export default function ChatClient({ activeSessionId }: { activeSessionId: string }) {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load existing messages when session changes
+  useEffect(() => {
+    async function loadSessionMessages() {
+      if (!activeSessionId) {
+        setMessages([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/sessions/${activeSessionId}`);
+        
+        if (response.ok) {
+          const sessionData = await response.json();
+          // Convert database messages to component format
+          const loadedMessages: Message[] = sessionData.messages.map((msg: any) => ({
+            role: msg.role,
+            content: msg.content
+          }));
+          setMessages(loadedMessages);
+        } else {
+          console.error("Failed to load session messages");
+          setMessages([]);
+        }
+      } catch (error) {
+        console.error("Error loading session messages:", error);
+        setMessages([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadSessionMessages();
+  }, [activeSessionId]);
 
   // 🚀 This is the onSend we connect to ChatWindow
   async function onSend(message: string, onStreamUpdate: (chunk: string) => void) {
@@ -46,6 +83,14 @@ export default function ChatClient({ activeSessionId }: { activeSessionId: strin
 
     // push final assistant reply into state
     setMessages((prev) => [...prev, { role: "assistant", content: assistantReply }]);
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-gray-500">Loading messages...</div>
+      </div>
+    );
   }
 
   return (

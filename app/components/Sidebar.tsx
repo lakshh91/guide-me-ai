@@ -45,11 +45,15 @@ export default function Sidebar({ onSelectSession, onNewSession, activeSessionId
   const fetchSessions = async () => {
     try {
       const res = await fetch("/api/sessions", { cache: "no-store" });
-      if (!res.ok) throw new Error("Failed to fetch sessions");
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Failed to fetch sessions:", res.status, errorText);
+        throw new Error(`Failed to fetch sessions: ${res.status} ${errorText}`);
+      }
       const data: Session[] = await res.json();
       setSessions(data);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching sessions:", err);
       setSessions([]);
     }
   };

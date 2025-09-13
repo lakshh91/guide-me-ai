@@ -7,12 +7,18 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user) {
+      return NextResponse.json([], { status: 401 });
+    }
+
+    // For JWT strategy, user ID is in the token, not the session
+    const userId = session.user.id || (session as any).user?.id;
+    if (!userId) {
       return NextResponse.json([], { status: 401 });
     }
 
     const sessions = await prisma.chatSession.findMany({
-      where: { userId: session.user.id },
+      where: { userId: userId },
       orderBy: { createdAt: "desc" },
       select: { id: true, title: true },
     });
@@ -27,14 +33,19 @@ export async function GET() {
 export async function POST() {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id || (session as any).user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const newSession = await prisma.chatSession.create({
       data: { 
         title: "Untitled Chat",
-        userId: session.user.id
+        userId: userId
       },
       select: { id: true, title: true },
     });
@@ -49,7 +60,12 @@ export async function POST() {
 export async function PATCH(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id || (session as any).user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -59,7 +75,7 @@ export async function PATCH(req: Request) {
     const updated = await prisma.chatSession.update({
       where: { 
         id,
-        userId: session.user.id // Ensure user owns this session
+        userId: userId // Ensure user owns this session
       },
       data: { title },
       select: { id: true, title: true },
@@ -76,7 +92,12 @@ export async function PATCH(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = session.user.id || (session as any).user?.id;
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -89,7 +110,7 @@ export async function DELETE(req: Request) {
       prisma.chatSession.delete({ 
         where: { 
           id,
-          userId: session.user.id // Ensure user owns this session
+          userId: userId // Ensure user owns this session
         }
       }),
     ]);
