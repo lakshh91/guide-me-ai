@@ -1,26 +1,384 @@
-@import "tailwindcss";
-
+/* Tailwind CSS directives - these are valid and required */
+/* stylelint-disable-next-line at-rule-no-unknown */
+@tailwind base;
+/* stylelint-disable-next-line at-rule-no-unknown */
+@tailwind components;
+/* stylelint-disable-next-line at-rule-no-unknown */
+@tailwind utilities;
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-nunito);
+  --font-heading: var(--font-dosis);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  letter-spacing: -0.005em;
+  font-weight: 400;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Better touch targets for mobile */
+  button, input, textarea {
+    min-height: 44px;
+  }
+  
+  /* Improve text selection on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Smooth scrolling for mobile */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* Markdown styling improvements */
+.prose h1 {
+  @apply text-3xl font-bold text-gray-900 dark:text-gray-100 mt-8 mb-6;
+  font-family: var(--font-heading), var(--font-sans), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  position: relative;
+}
+
+.prose h1::before {
+  content: '';
+  position: absolute;
+  left: -1rem;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 2px;
+}
+
+.prose h2 {
+  @apply text-2xl font-semibold text-gray-900 dark:text-gray-100 mt-7 mb-4;
+  font-family: var(--font-heading), var(--font-sans), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.prose h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 1.5rem;
+  background: linear-gradient(135deg, #10b981, #3b82f6);
+  border-radius: 2px;
+}
+
+.prose h3 {
+  @apply text-xl font-medium text-gray-900 dark:text-gray-100 mt-6 mb-3;
+  font-family: var(--font-heading), var(--font-sans), sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.4;
+  position: relative;
+  padding-left: 0.75rem;
+}
+
+.prose h3::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #3b82f6;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.prose p {
+  @apply mb-4 text-gray-800 dark:text-gray-200 leading-relaxed;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+.prose ul {
+  @apply list-none mb-4 space-y-2 text-gray-800 dark:text-gray-200;
+  padding-left: 0;
+}
+
+.prose ul li {
+  @apply leading-relaxed relative pl-6;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.prose ul li::before {
+  content: '◦';
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(135deg, #7E99A3, #5A7A85);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  font-size: 1.2em;
+}
+
+.prose ol {
+  @apply list-none mb-4 space-y-2 text-gray-800 dark:text-gray-200;
+  counter-reset: custom-counter;
+  padding-left: 0;
+}
+
+.prose ol li {
+  @apply leading-relaxed relative pl-8;
+  counter-increment: custom-counter;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.prose ol li::before {
+  content: counter(custom-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prose blockquote {
+  @apply border-l-4 pl-6 my-6 italic text-gray-700 dark:text-gray-300;
+  border-left-color: #3b82f6;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.05), transparent);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.prose code {
+  @apply bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-md text-sm font-mono;
+  font-family: var(--font-mono), 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  font-weight: 500;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.prose pre {
+  @apply my-4 rounded-lg overflow-hidden;
+}
+
+.prose hr {
+  @apply my-4 border-gray-300 dark:border-gray-600;
+}
+
+.prose strong {
+  @apply font-semibold text-gray-900 dark:text-gray-100;
+}
+
+.prose em {
+  @apply italic;
+}
+
+/* Code block styling */
+.prose pre code {
+  @apply bg-transparent p-0 text-sm;
+}
+
+/* Improve readability for AI responses */
+.ai-message .prose {
+  @apply max-w-none;
+}
+
+.ai-message .prose h1:first-child,
+.ai-message .prose h2:first-child,
+.ai-message .prose h3:first-child {
+  @apply mt-0;
+}
+
+/* Custom prose classes for better control */
+.prose-h1 {
+  @apply text-4xl font-bold text-gray-900 dark:text-gray-100 mt-8 mb-6;
+  font-family: var(--font-heading), var(--font-sans), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.prose-h1::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 3px;
+}
+
+.prose-h2 {
+  @apply text-3xl font-semibold text-gray-900 dark:text-gray-100 mt-7 mb-5;
+  font-family: var(--font-heading), var(--font-sans), sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  position: relative;
+  padding-left: 1.5rem;
+  text-transform: uppercase;
+}
+
+.prose-h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 2rem;
+  background: linear-gradient(135deg, #10b981, #3b82f6);
+  border-radius: 2px;
+}
+
+.prose-h3 {
+  @apply text-2xl font-medium text-gray-900 dark:text-gray-100 mt-6 mb-4;
+  font-family: var(--font-heading), var(--font-sans), sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.prose-h3::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #3b82f6;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.prose-ul {
+  @apply list-none mb-4 space-y-2 text-gray-800 dark:text-gray-200;
+  padding-left: 0;
+}
+
+.prose-li {
+  @apply leading-relaxed relative pl-6;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.prose-ul .prose-li::before {
+  content: '◦';
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(135deg, #7E99A3, #5A7A85);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  font-size: 1.2em;
+}
+
+.prose-ol {
+  @apply list-none mb-4 space-y-2 text-gray-800 dark:text-gray-200;
+  counter-reset: custom-counter;
+  padding-left: 0;
+}
+
+.prose-ol .prose-li {
+  @apply leading-relaxed relative pl-8;
+  counter-increment: custom-counter;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.prose-ol .prose-li::before {
+  content: counter(custom-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
