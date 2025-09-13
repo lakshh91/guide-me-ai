@@ -2,6 +2,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 
 export default function AuthButton() {
   const { data: session, status } = useSession();
@@ -39,9 +40,11 @@ export default function AuthButton() {
           aria-label="User menu"
         >
           {session.user?.image ? (
-            <img
+            <Image
               src={session.user.image}
               alt={session.user.name || "User"}
+              width={20}
+              height={20}
               className="w-5 h-5 rounded-full"
             />
           ) : (

@@ -50,7 +50,6 @@ export default function ChatClient({ activeSessionId }: { activeSessionId: strin
 
   return (
     <ChatWindow
-      activeSessionId={activeSessionId}
       messages={messages}
       onSend={onSend}
     />
