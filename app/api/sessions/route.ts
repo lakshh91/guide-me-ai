@@ -12,7 +12,7 @@ export async function GET() {
     }
 
     // For JWT strategy, user ID is in the token, not the session
-    const userId = session.user.id || (session as any).user?.id;
+    const userId = session.user.id || (session as { user?: { id?: string } }).user?.id;
     if (!userId) {
       return NextResponse.json([], { status: 401 });
     }
@@ -37,7 +37,7 @@ export async function POST() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id || (session as any).user?.id;
+    const userId = session.user.id || (session as { user?: { id?: string } }).user?.id;
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -64,7 +64,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id || (session as any).user?.id;
+    const userId = session.user.id || (session as { user?: { id?: string } }).user?.id;
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -96,7 +96,7 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id || (session as any).user?.id;
+    const userId = session.user.id || (session as { user?: { id?: string } }).user?.id;
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

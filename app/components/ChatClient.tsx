@@ -28,8 +28,8 @@ export default function ChatClient({ activeSessionId }: { activeSessionId: strin
         if (response.ok) {
           const sessionData = await response.json();
           // Convert database messages to component format
-          const loadedMessages: Message[] = sessionData.messages.map((msg: any) => ({
-            role: msg.role,
+          const loadedMessages: Message[] = sessionData.messages.map((msg: { role: string; content: string }) => ({
+            role: msg.role as "user" | "assistant",
             content: msg.content
           }));
           setMessages(loadedMessages);
